@@ -1,32 +1,37 @@
-const inputBox = document.querySelector("#input-box")
-// console.log(inputBox);
+const inputBox = document.querySelector("#input-box");
+const buttons = document.querySelectorAll(".button");
 
-const buttons = document.querySelectorAll(".button")
-// console.log(buttons);
-
-let inputString = ""
+let inputString = "";
 
 buttons.forEach((button) => {
-    // console.log(button);
     button.addEventListener("click", (e) => {
-        if (e.target.innerText == "=") {
-            inputString = eval(inputString)
-            inputBox.value = inputString
-        } else if (e.target.innerText == "AC") {
-            inputString = ""
-            inputBox.value = inputString
+        const buttonText = e.target.textContent;
 
-        } else if (e.target.innerText == "☒") {
-
-            inputString = inputString.substring(0, (inputString.length -1))
-            inputBox.value = inputString
-
-        } else {
-            inputString += e.target.innerText
-            inputBox.value = inputString
+        if (buttonText === "=") {
+            if (inputString.trim() === "") {
+                inputBox.value = "Error";
+                return;
+            }
+            try {
+                inputString = new Function('return ' + inputString)();
+                inputBox.value = inputString;
+            } catch (error) {
+                inputBox.value = "Error";
+            }
+        } 
+        else if (buttonText === "AC") {
+            inputString = "";
+            inputBox.value = inputString;
+        } 
+        else if (buttonText === "☒") {
+            if (inputString.length > 0) {
+                inputString = inputString.substring(0, inputString.length - 1);
+                inputBox.value = inputString;
+            }
+        } 
+        else {
+            inputString += buttonText;
+            inputBox.value = inputString;
         }
-    })
-})
-
-
-
+    });
+});
